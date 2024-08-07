@@ -1,6 +1,8 @@
 package squeek.speedometer.gui.widget;
 
+import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.StatCollector;
 import squeek.speedometer.gui.GuiEvent;
 import squeek.speedometer.gui.IGuiHierarchical;
 
@@ -13,6 +15,15 @@ public class WidgetTextField extends WidgetBase
 	{
 		super(parent, x, y, w, h);
 		this.textField = new GuiTextField(0, mc.fontRendererObj, getX(), getY(), getWidth(), getHeight());
+	}
+
+	public WidgetTextField(IGuiHierarchical parent, int x, int y, int w, int h, String label)
+	{
+		super(parent, x, y, w, h);
+		this.textField = new GuiTextField(0, mc.fontRendererObj, getX(), getY(), getWidth(), getHeight());
+		WidgetLabel labelWidget = new WidgetLabel(parent, getX(), getY(), label);
+		labelWidget.drawCentered = false;
+		labelWidget.setPos(getX() + this.textField.getWidth(), getY() + (getHeight() - labelWidget.getHeight()) / 2);
 	}
 
 	@Override

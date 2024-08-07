@@ -139,8 +139,8 @@ public class ScreenSpeedometerSettings extends GuiScreen
 
 		WidgetWrapper speedAvgSettings = new WidgetWrapper(fluidGrid);
 		new WidgetLabel(speedAvgSettings, 0, 0, StatCollector.translateToLocal("squeedometer.settings.speedAvg")).drawCentered = false;
-		speedAvgButton = new WidgetButton(speedAvgSettings, 0, fontRendererObj.FONT_HEIGHT + padding, colWidth, buttonHeight, "ticks");
-		speedAvgField = new WidgetTextField(speedAvgSettings, 0, fontRendererObj.FONT_HEIGHT + buttonHeight + padding * 2, colWidth, rowHeight);
+		speedAvgButton = new WidgetButton(speedAvgSettings, 0, fontRendererObj.FONT_HEIGHT + padding, colWidth, buttonHeight, "");
+		speedAvgField = new WidgetTextField(speedAvgSettings, 0, fontRendererObj.FONT_HEIGHT + buttonHeight + padding * 2, colWidth, rowHeight, "s");
 
 		if (!Loader.isModLoaded("Squake"))
 		{
@@ -167,7 +167,7 @@ public class ScreenSpeedometerSettings extends GuiScreen
 		marginField.setText(String.valueOf(ModConfig.SPEEDOMETER_MARGIN.getInt(0)));
 		paddingField.setText(String.valueOf(ModConfig.SPEEDOMETER_PADDING.getInt(0)));
 		precisionField.setText(String.valueOf(ModConfig.SPEEDOMETER_PRECISION.getInt(0)));
-		speedAvgField.setText(String.valueOf(ModConfig.SPEED_AVERAGE_TIMEFRAME.getInt(0)));
+		speedAvgField.setText(String.valueOf(ModConfig.SPEED_AVERAGE_TIMEFRAME.getInt(0) / 20d));
 
 		String alignX = ModConfig.SPEEDOMETER_ALIGNMENT_X.getString();
 		String alignY = ModConfig.SPEEDOMETER_ALIGNMENT_Y.getString();
@@ -277,9 +277,11 @@ public class ScreenSpeedometerSettings extends GuiScreen
 		{
 			String text = (String) data[0];
 			int intVal;
+			double doubleVal;
 			try
 			{
 				intVal = Integer.parseInt(text);
+				doubleVal = Double.parseDouble(text);
 			}
 			catch (NumberFormatException ex)
 			{
@@ -295,8 +297,8 @@ public class ScreenSpeedometerSettings extends GuiScreen
 				ModConfig.SPEEDOMETER_PADDING.set(intVal);
 			else if (source == precisionField && intVal >= 0)
 				ModConfig.SPEEDOMETER_PRECISION.set(intVal);
-			else if (source == speedAvgField && intVal >= 1)
-				ModConfig.SPEED_AVERAGE_TIMEFRAME.set(intVal);
+			else if (source == speedAvgField && (int)(doubleVal * 20) > 0)
+				ModConfig.SPEED_AVERAGE_TIMEFRAME.set((int)(doubleVal * 20));
 			else
 				return;
 
