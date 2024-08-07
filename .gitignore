@@ -5,8 +5,8 @@ target/
 lib/
 launcher/
 .gradle/
+.idea
 *.zip
-*.jar
 
 # Misc mod files
 media/
@@ -23,6 +23,7 @@ libs/
 .pydevproject
 
 # MCP Files
+run/
 docs/
 conf/
 eclipse/
@@ -33,8 +34,8 @@ temp/
 reobf/
 CHANGELOG
 LICENSE.txt
-*.bat
 *.sh
 
 # Misc
 *.rej
+*.hprof

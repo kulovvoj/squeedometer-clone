@@ -11,15 +11,17 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+//		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+		classpath files('forgegradle/ForgeGradle-2.1.2.jar')
 	}
 }
 
-apply plugin: 'forge'
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 minecraft {
-	version = "1.8-11.14.1.1334"
-	mappings = "snapshot_20141130"
+	version = "${minecraft_version}-${forge_version}"
+	runDir = "run"
+	mappings = mappings_version
 }
 
 group = project.projectDir.name.toLowerCase()
