@@ -1,7 +1,7 @@
 [Squeedometer](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2181009-squeedometer-adds-a-speedometer-to-your-hud)
 ============
 
-A speedometer for Minecraft, now showing speed average.
+A clone of the mod Squeedometer for Minecraft, now showing speed average.
 
 **/sm reset**
 - manual reset for the speed average 
@@ -15,3 +15,7 @@ A speedometer for Minecraft, now showing speed average.
 **Made by Squeek**
 
 https://github.com/squeek502/Squeedometer
+
+# JAR
+
+You can find the JARs in the jar folder of the repository.
