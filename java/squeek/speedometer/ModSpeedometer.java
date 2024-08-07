@@ -1,5 +1,6 @@
 package squeek.speedometer;
 
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
@@ -11,10 +12,13 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import squeek.speedometer.command.ModCommand;
 
 @Mod(modid = ModInfo.MODID, version = ModInfo.VERSION, acceptedMinecraftVersions="[1.8,1.9)")
 public class ModSpeedometer
 {
+	public final HudSpeedometer hudSpeedometer = new HudSpeedometer();
+
 	@Instance(value = ModInfo.MODID)
 	public static ModSpeedometer instance;
 
@@ -36,7 +40,8 @@ public class ModSpeedometer
 	@SideOnly(Side.CLIENT)
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		MinecraftForge.EVENT_BUS.register(new HudSpeedometer());
+		ClientCommandHandler.instance.registerCommand(new ModCommand(this));
+		MinecraftForge.EVENT_BUS.register(hudSpeedometer);
 		FMLInterModComms.sendRuntimeMessage(ModInfo.MODID, "VersionChecker", "addVersionCheck", "http://www.ryanliptak.com/minecraft/versionchecker/squeek502/Squeedometer");
 	}
 }

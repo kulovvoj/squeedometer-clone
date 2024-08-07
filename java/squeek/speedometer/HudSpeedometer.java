@@ -63,6 +63,10 @@ public class HudSpeedometer extends Gui
 		this.draw();
 	}
 
+	public void resetAverage() {
+		this.speedHistory = new LinkedList<Double>();
+	}
+
 	private float lastJumpInfoTimeRemaining()
 	{
 		return (Minecraft.getSystemTime() - this.jumpInfoStartTime) / 1000.0F;
