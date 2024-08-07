@@ -66,6 +66,14 @@ public class ModConfig
 	private static final String SPEED_UNIT_NAME = "speedUnit";
 	public static final String SPEED_UNIT_DEFAULT = "bps";
 
+	public static Property SPEED_AVERAGE_TIMEFRAME;
+	private static final String SPEED_AVERAGE_TIMEFRAME_NAME = "speedAvgTimeframe";
+	public static final int SPEED_AVERAGE_TIMEFRAME_DEFAULT = 100;
+
+	public static Property SPEED_AVERAGE_ENABLED;
+	private static final String SPEED_AVERAGE_ENABLED_NAME = "speedAvgEnabled";
+	public static final boolean SPEED_AVERAGE_ENABLED_DEFAULT = true;
+
 	private static Configuration config;
 
 	public static void init(File file)
@@ -105,6 +113,10 @@ public class ModConfig
 		LAST_JUMP_INFO_ENABLED = config.get(CATEGORY_SPEEDOMETER, LAST_JUMP_INFO_ENABLED_NAME, LAST_JUMP_INFO_ENABLED_DEFAULT);
 		LAST_JUMP_INFO_FLOAT_ENABLED = config.get(CATEGORY_SPEEDOMETER, LAST_JUMP_INFO_FLOAT_ENABLED_NAME, LAST_JUMP_INFO_FLOAT_ENABLED_DEFAULT);
 		LAST_JUMP_INFO_DURATION = config.get(CATEGORY_SPEEDOMETER, LAST_JUMP_INFO_DURATION_NAME, LAST_JUMP_INFO_DURATION_DEFAULT);
+
+		SPEED_AVERAGE_TIMEFRAME = config.get(CATEGORY_SPEEDOMETER, SPEED_AVERAGE_TIMEFRAME_NAME, SPEED_AVERAGE_TIMEFRAME_DEFAULT);
+
+		SPEED_AVERAGE_ENABLED = config.get(CATEGORY_SPEEDOMETER, SPEED_AVERAGE_ENABLED_NAME, SPEED_AVERAGE_ENABLED_DEFAULT);
 
 		SPEED_UNIT_PROPERTY = config.get(CATEGORY_SPEEDOMETER, SPEED_UNIT_NAME, SPEED_UNIT_DEFAULT, "valid units: bpt (blocks/tick), bps (blocks/sec), ms (meters/sec), kmh  (km/hour), mph (miles/hour)");
 		String speedUnitId = SPEED_UNIT_PROPERTY.getString();

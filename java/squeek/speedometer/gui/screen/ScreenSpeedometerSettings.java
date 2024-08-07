@@ -35,6 +35,8 @@ public class ScreenSpeedometerSettings extends GuiScreen
 	protected WidgetTextField marginField;
 	protected WidgetWrapper alignmentSettings;
 	protected WidgetTextField precisionField;
+	protected WidgetButton speedAvgButton;
+	protected WidgetTextField speedAvgField;
 
 	protected class WidgetScreenAlignment extends WidgetButton
 	{
@@ -135,6 +137,11 @@ public class ScreenSpeedometerSettings extends GuiScreen
 		precisionField = new WidgetTextField(precisionSettings, 0, fontRendererObj.FONT_HEIGHT + padding, colWidth, rowHeight);
 		new WidgetLabel(precisionSettings, 0, 0, StatCollector.translateToLocal("squeedometer.settings.precision")).drawCentered = false;
 
+		WidgetWrapper speedAvgSettings = new WidgetWrapper(fluidGrid);
+		new WidgetLabel(speedAvgSettings, 0, 0, StatCollector.translateToLocal("squeedometer.settings.speedAvg")).drawCentered = false;
+		speedAvgButton = new WidgetButton(speedAvgSettings, 0, fontRendererObj.FONT_HEIGHT + padding, colWidth, buttonHeight, "ticks");
+		speedAvgField = new WidgetTextField(speedAvgSettings, 0, fontRendererObj.FONT_HEIGHT + buttonHeight + padding * 2, colWidth, rowHeight);
+
 		if (!Loader.isModLoaded("Squake"))
 		{
 			lastJumpButton.setEnabled(false);
@@ -154,11 +161,13 @@ public class ScreenSpeedometerSettings extends GuiScreen
 		unitsButton.setLabelText(StatCollector.translateToLocalFormatted("squeedometer.settings.units", ModConfig.SPEED_UNIT.toString()));
 		backgroundButton.setLabelText(StatCollector.translateToLocalFormatted("squeedometer.settings.background", ModConfig.SPEEDOMETER_DRAW_BACKGROUND.getBoolean(true) ? StatCollector.translateToLocal("squeedometer.settings.on") : StatCollector.translateToLocal("squeedometer.settings.off")));
 		showUnitsButton.setLabelText(StatCollector.translateToLocalFormatted("squeedometer.settings.show.units", ModConfig.SHOW_UNITS.getBoolean(true) ? ModConfig.MINIMAL_UNITS.getBoolean(true) ? StatCollector.translateToLocal("squeedometer.settings.minimal") : StatCollector.translateToLocal("squeedometer.settings.on") : StatCollector.translateToLocal("squeedometer.settings.off")));
+		speedAvgButton.setLabelText(StatCollector.translateToLocalFormatted("squeedometer.settings.speedAvgEnabled", ModConfig.SPEED_AVERAGE_ENABLED.getBoolean(true) ? StatCollector.translateToLocal("squeedometer.settings.on") : StatCollector.translateToLocal("squeedometer.settings.off")));
 		xField.setText(String.valueOf(ModConfig.SPEEDOMETER_XPOS.getInt(0)));
 		yField.setText(String.valueOf(ModConfig.SPEEDOMETER_YPOS.getInt(0)));
 		marginField.setText(String.valueOf(ModConfig.SPEEDOMETER_MARGIN.getInt(0)));
 		paddingField.setText(String.valueOf(ModConfig.SPEEDOMETER_PADDING.getInt(0)));
 		precisionField.setText(String.valueOf(ModConfig.SPEEDOMETER_PRECISION.getInt(0)));
+		speedAvgField.setText(String.valueOf(ModConfig.SPEED_AVERAGE_TIMEFRAME.getInt(0)));
 
 		String alignX = ModConfig.SPEEDOMETER_ALIGNMENT_X.getString();
 		String alignY = ModConfig.SPEEDOMETER_ALIGNMENT_Y.getString();
@@ -254,6 +263,11 @@ public class ScreenSpeedometerSettings extends GuiScreen
 				ModConfig.SPEEDOMETER_ALIGNMENT_X.set((String) data[2]);
 				ModConfig.SPEEDOMETER_ALIGNMENT_Y.set((String) data[3]);
 			}
+			else if (source == speedAvgButton)
+			{
+				boolean speedAvgEnabled = ModConfig.SPEED_AVERAGE_ENABLED.getBoolean(true);
+				ModConfig.SPEED_AVERAGE_ENABLED.set(!speedAvgEnabled);
+			}
 			else
 				return;
 
@@ -279,8 +293,10 @@ public class ScreenSpeedometerSettings extends GuiScreen
 				ModConfig.SPEEDOMETER_MARGIN.set(intVal);
 			else if (source == paddingField)
 				ModConfig.SPEEDOMETER_PADDING.set(intVal);
-			else if (source == precisionField)
+			else if (source == precisionField && intVal >= 0)
 				ModConfig.SPEEDOMETER_PRECISION.set(intVal);
+			else if (source == speedAvgField && intVal >= 1)
+				ModConfig.SPEED_AVERAGE_TIMEFRAME.set(intVal);
 			else
 				return;
 

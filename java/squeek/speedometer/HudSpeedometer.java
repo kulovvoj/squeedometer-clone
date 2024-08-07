@@ -1,6 +1,8 @@
 package squeek.speedometer;
 
 import java.lang.reflect.Constructor;
+import java.util.LinkedList;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -25,6 +27,7 @@ public class HudSpeedometer extends Gui
 	private boolean wasFirstJump = true;
 
 	private double currentSpeed = 0.0D;
+	private LinkedList<Double> speedHistory = new LinkedList<Double>();
 
 	private static Constructor<ScaledResolution> scaledResolution188Constructor = null;
 	static
@@ -86,14 +89,15 @@ public class HudSpeedometer extends Gui
 			}
 		}
 		else
-			scaledresolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+			scaledresolution = new ScaledResolution(mc);
 
 		boolean drawCurrentSpeed = true;
 		boolean drawJumpSpeedChanged = lastJumpSpeed != 0 && showingLastJumpInfo();
 
 		String numFormatString = "%." + ModConfig.SPEEDOMETER_PRECISION.getInt() + "f";
 		String unitString = ModConfig.SHOW_UNITS.getBoolean(true) ? " " + (ModConfig.MINIMAL_UNITS.getBoolean(true) ? ModConfig.SPEED_UNIT.minimalName : ModConfig.SPEED_UNIT.name) : "";
-		String strCurrentSpeed = drawCurrentSpeed ? String.format(numFormatString + "%s", ModConfig.SPEED_UNIT.convertTo(this.currentSpeed), unitString) : null;
+		String strAverageSpeed = ModConfig.SPEED_AVERAGE_ENABLED.getBoolean(true) ? String.format(" (" + numFormatString + " avg)", ModConfig.SPEED_UNIT.convertTo(this.getAverageSpeed())) : "";
+		String strCurrentSpeed = drawCurrentSpeed ? String.format(numFormatString + "%s", ModConfig.SPEED_UNIT.convertTo(this.currentSpeed), unitString) + strAverageSpeed : null;
 		String strJumpSpeedChanged = !this.wasFirstJump ? String.format("%+.2f (%+.1f%%)", ModConfig.SPEED_UNIT.convertTo(this.jumpSpeedChanged), ((this.percentJumpSpeedChanged) * 100.0F)) : String.format(numFormatString, ModConfig.SPEED_UNIT.convertTo(this.firstJumpSpeed));
 
 		int width = HudSpeedometer.mc.fontRendererObj.getStringWidth(strCurrentSpeed);
@@ -151,11 +155,24 @@ public class HudSpeedometer extends Gui
 		}
 	}
 
+	private double getAverageSpeed() {
+		double speedHistorySum = 0d;
+		for (double speed : this.speedHistory) {
+			speedHistorySum += speed;
+		}
+		return speedHistorySum / this.speedHistory.size();
+	}
+
 	private void updateValues()
 	{
 		double distTraveledLastTickX = HudSpeedometer.mc.thePlayer.posX - HudSpeedometer.mc.thePlayer.prevPosX;
 		double distTraveledLastTickZ = HudSpeedometer.mc.thePlayer.posZ - HudSpeedometer.mc.thePlayer.prevPosZ;
 		this.currentSpeed = MathHelper.sqrt_double(distTraveledLastTickX * distTraveledLastTickX + distTraveledLastTickZ * distTraveledLastTickZ);
+		while (!this.speedHistory.isEmpty() && this.speedHistory.size() >= ModConfig.SPEED_AVERAGE_TIMEFRAME.getInt()) {
+			this.speedHistory.removeFirst();
+		}
+
+		this.speedHistory.add(this.currentSpeed);
 
 		if ((showingLastJumpInfo() || didJumpThisTick) && !(HudSpeedometer.mc.thePlayer.onGround && !isJumping))
 		{
